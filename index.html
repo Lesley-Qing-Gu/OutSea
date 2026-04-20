@@ -47,6 +47,16 @@ canvas{display:block;cursor:pointer;position:fixed;top:0;left:0;z-index:10}
 
 .footer{padding:40px;text-align:center;font-size:11px;color:rgba(255,255,255,.35);letter-spacing:2px}
 .scroll-reveal,.col{opacity:0;transform:translateY(40px)}
+@media(max-width:768px){
+.tagline{font-size:16px;padding:80px 20px 40px}
+.logo-svg svg{width:200px}
+.section{padding:50px 20px}
+.about p{font-size:13px}
+.columns{flex-direction:column;gap:32px;min-height:auto}
+.col{padding:24px 16px}
+.hosts{flex-direction:column;gap:16px}
+.platform-links{flex-direction:column;gap:8px}
+}
 .bg-video{position:fixed;top:50%;left:50%;min-width:100%;min-height:100%;z-index:0;pointer-events:none;display:none;transition:opacity 1.5s ease;transform:translate(-50%,-50%) scale(1.35)}
 #noise{position:fixed;top:0;left:0;width:100%;height:100%;z-index:0;pointer-events:none;opacity:0.05;display:none}
 #click-hint{position:fixed;bottom:60px;left:50%;transform:translateX(-50%);z-index:11;color:rgba(255,255,255,0.6);font-size:13px;letter-spacing:4px;pointer-events:none;animation:pulse 2s ease-in-out infinite}

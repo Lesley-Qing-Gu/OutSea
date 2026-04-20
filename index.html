@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>离岸 OutSea</title>
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/ScrollTrigger.min.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Silkscreen:wght@400;700&display=swap" rel="stylesheet">
+<style>
+@font-face{font-family:'DotSong';src:url('DottedSongtiSquareRegular.otf') format('opentype')}
+*{margin:0;padding:0;box-sizing:border-box}
+html,body{width:100%;height:100%}
+html{scrollbar-width:none}
+html::-webkit-scrollbar{display:none}
+body{background:#769EBE;overflow:hidden;font-family:'DotSong','Silkscreen','Courier New',monospace;color:#D3CA9F}
+canvas{display:block;cursor:pointer;position:fixed;top:0;left:0;z-index:10}
+
+#content{display:none;position:relative;z-index:1}
+
+.section{padding:80px 40px;text-align:center}
+
+.logo-svg{margin-bottom:40px}
+.logo-svg svg{width:280px;height:auto}
+.tagline{font-size:20px;color:#fff;line-height:2.2;letter-spacing:2px;padding:120px 40px 60px}
+
+.about{max-width:700px;margin:0 auto}
+.about h2{font-size:14px;color:#D3CA9F;letter-spacing:4px;text-transform:uppercase;margin-bottom:24px}
+.about p{font-size:14px;line-height:2;color:rgba(255,255,255,.85);margin-bottom:16px}
+.hosts{margin-top:40px;font-size:13px;color:#fff;letter-spacing:1px;display:flex;justify-content:center;gap:40px}
+.host{display:flex;align-items:center;gap:10px}
+.host img{width:28px;height:28px}
+
+.columns{display:flex;gap:24px;max-width:960px;margin:0 auto;justify-content:center;min-height:50vh;align-items:center}
+.col{flex:1;padding:32px 20px;text-align:center}
+.col-icon{margin-bottom:12px}
+.col-icon img{width:40px;height:40px}
+.col h3{font-size:16px;color:#fff;margin-bottom:6px;letter-spacing:2px}
+.col h4{font-size:11px;color:#D3CA9F;letter-spacing:3px;text-transform:uppercase;margin-bottom:16px}
+.col p{font-size:12px;line-height:1.8;color:rgba(255,255,255,.7)}
+
+.listen-icon{margin-bottom:16px}
+.listen-icon img{width:36px;height:36px}
+.platforms h2{font-size:14px;color:#fff;letter-spacing:4px;margin-bottom:32px}
+.platform-links{display:flex;gap:16px;justify-content:center;flex-wrap:wrap}
+.platform-links span{padding:12px 24px;color:#fff;font-size:13px;letter-spacing:2px}
+
+.footer{padding:40px;text-align:center;font-size:11px;color:rgba(255,255,255,.35);letter-spacing:2px}
+.scroll-reveal,.col{opacity:0;transform:translateY(40px)}
+.bg-video{position:fixed;top:50%;left:50%;min-width:100%;min-height:100%;z-index:0;pointer-events:none;display:none;transition:opacity 1.5s ease;transform:translate(-50%,-50%) scale(1.35)}
+#noise{position:fixed;top:0;left:0;width:100%;height:100%;z-index:0;pointer-events:none;opacity:0.05;display:none}
+#click-hint{position:fixed;bottom:60px;left:50%;transform:translateX(-50%);z-index:11;color:rgba(255,255,255,0.6);font-size:13px;letter-spacing:4px;pointer-events:none;animation:pulse 2s ease-in-out infinite}
+@keyframes pulse{0%,100%{opacity:0.4}50%{opacity:1}}
+</style>
+</head>
+<body>
+
+<canvas id="c"></canvas>
+<video class="bg-video" id="bgv1" muted playsinline src="video.mp4"></video>
+<video class="bg-video" id="bgv2" muted playsinline src="video.mp4"></video>
+<canvas id="noise"></canvas>
+<div id="click-hint">CLICK TO OUT</div>
+<audio id="bgm" loop preload="auto" src="dragon-studio-gentle-ocean-shore-waves-499665.mp3"></audio>
+
+<div id="content">
+  <div class="section tagline">
+    <div class="logo-svg">
+      <svg width="459" height="275" viewBox="0 0 459 275" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M143.953 -4.05312e-06H152.953V9H143.953V-4.05312e-06ZM86.3525 11.55H95.2025V20.55H86.3525V11.55ZM97.7525 11.55H106.753V20.55H97.7525V11.55ZM109.303 11.55H118.303V20.55H109.303V11.55ZM120.853 11.55H129.853V20.55H120.853V11.55ZM132.403 11.55H141.403V20.55H132.403V11.55ZM143.953 11.55H152.953V20.55H143.953V11.55ZM155.503 11.55H164.503V20.55H155.503V11.55ZM167.053 11.55H176.053V20.55H167.053V11.55ZM178.603 11.55H187.603V20.55H178.603V11.55ZM190.153 11.55H199.153V20.55H190.153V11.55ZM201.703 11.55H210.703V20.55H201.703V11.55ZM213.253 11.55H222.253V20.55H213.253V11.55ZM109.303 23.1H118.303V32.1H109.303V23.1ZM132.403 23.1H141.403V32.1H132.403V23.1ZM167.053 23.1H176.053V32.1H167.053V23.1ZM190.153 23.1H199.153V32.1H190.153V23.1ZM109.303 34.65H118.303V43.65H109.303V34.65ZM143.953 34.65H152.953V43.65H143.953V34.65ZM155.503 34.65H164.503V43.65H155.503V34.65ZM190.153 34.65H199.153V43.65H190.153V34.65ZM109.303 46.2H118.303V55.2H109.303V46.2ZM132.403 46.2H141.403V55.2H132.403V46.2ZM167.053 46.2H176.053V55.2H167.053V46.2ZM190.153 46.2H199.153V55.2H190.153V46.2ZM109.303 57.75H118.303V66.75H109.303V57.75ZM120.853 57.75H129.853V66.75H120.853V57.75ZM132.403 57.75H141.403V66.75H132.403V57.75ZM143.953 57.75H152.953V66.75H143.953V57.75ZM155.503 57.75H164.503V66.75H155.503V57.75ZM167.053 57.75H176.053V66.75H167.053V57.75ZM178.603 57.75H187.603V66.75H178.603V57.75ZM190.153 57.75H199.153V66.75H190.153V57.75ZM143.953 69.3H152.953V78.3H143.953V69.3ZM97.7525 80.85H106.753V89.85H97.7525V80.85ZM109.303 80.85H118.303V89.85H109.303V80.85ZM120.853 80.85H129.853V89.85H120.853V80.85ZM132.403 80.85H141.403V89.85H132.403V80.85ZM143.953 80.85H152.953V89.85H143.953V80.85ZM155.503 80.85H164.503V89.85H155.503V80.85ZM167.053 80.85H176.053V89.85H167.053V80.85ZM178.603 80.85H187.603V89.85H178.603V80.85ZM190.153 80.85H199.153V89.85H190.153V80.85ZM201.703 80.85H210.703V89.85H201.703V80.85ZM97.7525 92.4H106.753V101.4H97.7525V92.4ZM132.403 92.4H141.403V101.4H132.403V92.4ZM167.053 92.4H176.053V101.4H167.053V92.4ZM201.703 92.4H210.703V101.4H201.703V92.4ZM97.7525 103.95H106.753V112.8H97.7525V103.95ZM120.853 103.95H129.853V112.8H120.853V103.95ZM132.403 103.95H141.403V112.8H132.403V103.95ZM143.953 103.95H152.953V112.8H143.953V103.95ZM155.503 103.95H164.503V112.8H155.503V103.95ZM167.053 103.95H176.053V112.8H167.053V103.95ZM178.603 103.95H187.603V112.8H178.603V103.95ZM201.703 103.95H210.703V112.8H201.703V103.95ZM97.7525 115.5H106.753V124.35H97.7525V115.5ZM120.853 115.5H129.853V124.35H120.853V115.5ZM178.603 115.5H187.603V124.35H178.603V115.5ZM201.703 115.5H210.703V124.35H201.703V115.5ZM97.7525 126.9H106.753V135.9H97.7525V126.9ZM190.153 126.9H199.153V135.9H190.153V126.9ZM201.703 126.9H210.703V135.9H201.703V126.9ZM259.303 -4.05312e-06H268.303V9H259.303V-4.05312e-06ZM305.503 -4.05312e-06H314.503V9H305.503V-4.05312e-06ZM351.703 -4.05312e-06H360.703V9H351.703V-4.05312e-06ZM259.303 11.55H268.303V20.55H259.303V11.55ZM305.503 11.55H314.503V20.55H305.503V11.55ZM351.703 11.55H360.703V20.55H351.703V11.55ZM259.303 23.1H268.303V32.1H259.303V23.1ZM270.853 23.1H279.853V32.1H270.853V23.1ZM282.403 23.1H291.403V32.1H282.403V23.1ZM293.953 23.1H302.953V32.1H293.953V23.1ZM305.503 23.1H314.503V32.1H305.503V23.1ZM317.053 23.1H326.053V32.1H317.053V23.1ZM328.603 23.1H337.603V32.1H328.603V23.1ZM340.153 23.1H349.153V32.1H340.153V23.1ZM351.703 23.1H360.703V32.1H351.703V23.1ZM259.303 46.2H268.303V55.2H259.303V46.2ZM270.853 46.2H279.853V55.2H270.853V46.2ZM282.403 46.2H291.403V55.2H282.403V46.2ZM293.953 46.2H302.953V55.2H293.953V46.2ZM305.503 46.2H314.503V55.2H305.503V46.2ZM317.053 46.2H326.053V55.2H317.053V46.2ZM328.603 46.2H337.603V55.2H328.603V46.2ZM340.153 46.2H349.153V55.2H340.153V46.2ZM351.703 46.2H360.703V55.2H351.703V46.2ZM363.253 46.2H372.253V55.2H363.253V46.2ZM259.303 57.75H268.303V66.75H259.303V57.75ZM259.303 69.3H268.303V78.3H259.303V69.3ZM282.403 69.3H291.403V78.3H282.403V69.3ZM293.953 69.3H302.953V78.3H293.953V69.3ZM305.503 69.3H314.503V78.3H305.503V69.3ZM317.053 69.3H326.053V78.3H317.053V69.3ZM328.603 69.3H337.603V78.3H328.603V69.3ZM340.153 69.3H349.153V78.3H340.153V69.3ZM351.703 69.3H360.703V78.3H351.703V69.3ZM259.303 80.85H268.303V89.85H259.303V80.85ZM317.053 80.85H326.053V89.85H317.053V80.85ZM259.303 92.4H268.303V101.4H259.303V92.4ZM270.853 92.4H279.853V101.4H270.853V92.4ZM282.403 92.4H291.403V101.4H282.403V92.4ZM293.953 92.4H302.953V101.4H293.953V92.4ZM305.503 92.4H314.503V101.4H305.503V92.4ZM317.053 92.4H326.053V101.4H317.053V92.4ZM328.603 92.4H337.603V101.4H328.603V92.4ZM340.153 92.4H349.153V101.4H340.153V92.4ZM351.703 92.4H360.703V101.4H351.703V92.4ZM363.253 92.4H372.253V101.4H363.253V92.4ZM247.753 103.95H256.753V112.8H247.753V103.95ZM317.053 103.95H326.053V112.8H317.053V103.95ZM247.753 115.5H256.753V124.35H247.753V115.5ZM317.053 115.5H326.053V124.35H317.053V115.5ZM236.353 126.9H245.203V135.9H236.353V126.9ZM317.053 126.9H326.053V135.9H317.053V126.9ZM22.95 173.1H31.95V182.1H22.95V173.1ZM34.5 173.1H43.5V182.1H34.5V173.1ZM46.05 173.1H55.05V182.1H46.05V173.1ZM11.4 184.65H20.4V193.65H11.4V184.65ZM57.6 184.65H66.6V193.65H57.6V184.65ZM-6.02193e-06 196.2H8.84999V205.2H-6.02193e-06V196.2ZM69.15 196.2H78.15V205.2H69.15V196.2ZM-6.02193e-06 207.75H8.84999V216.75H-6.02193e-06V207.75ZM69.15 207.75H78.15V216.75H69.15V207.75ZM-6.02193e-06 219.3H8.84999V228.3H-6.02193e-06V219.3ZM69.15 219.3H78.15V228.3H69.15V219.3ZM-6.02193e-06 230.85H8.84999V239.85H-6.02193e-06V230.85ZM69.15 230.85H78.15V239.85H69.15V230.85ZM-6.02193e-06 242.4H8.84999V251.4H-6.02193e-06V242.4ZM69.15 242.4H78.15V251.4H69.15V242.4ZM11.4 253.95H20.4V262.8H11.4V253.95ZM57.6 253.95H66.6V262.8H57.6V253.95ZM22.95 265.5H31.95V274.35H22.95V265.5ZM34.5 265.5H43.5V274.35H34.5V265.5ZM46.05 265.5H55.05V274.35H46.05V265.5ZM92.2852 196.2H101.135V205.2H92.2852V196.2ZM149.885 196.2H158.885V205.2H149.885V196.2ZM92.2852 207.75H101.135V216.75H92.2852V207.75ZM149.885 207.75H158.885V216.75H149.885V207.75ZM92.2852 219.3H101.135V228.3H92.2852V219.3ZM149.885 219.3H158.885V228.3H149.885V219.3ZM92.2852 230.85H101.135V239.85H92.2852V230.85ZM149.885 230.85H158.885V239.85H149.885V230.85ZM92.2852 242.4H101.135V251.4H92.2852V242.4ZM149.885 242.4H158.885V251.4H149.885V242.4ZM92.2852 253.95H101.135V262.8H92.2852V253.95ZM138.335 253.95H147.335V262.8H138.335V253.95ZM149.885 253.95H158.885V262.8H149.885V253.95ZM103.685 265.5H112.685V274.35H103.685V265.5ZM115.235 265.5H124.235V274.35H115.235V265.5ZM126.785 265.5H135.785V274.35H126.785V265.5ZM149.885 265.5H158.885V274.35H149.885V265.5ZM184.398 173.1H193.398V182.1H184.398V173.1ZM184.398 184.65H193.398V193.65H184.398V184.65ZM172.998 196.2H181.848V205.2H172.998V196.2ZM184.398 196.2H193.398V205.2H184.398V196.2ZM195.948 196.2H204.948V205.2H195.948V196.2ZM207.498 196.2H216.498V205.2H207.498V196.2ZM184.398 207.75H193.398V216.75H184.398V207.75ZM184.398 219.3H193.398V228.3H184.398V219.3ZM184.398 230.85H193.398V239.85H184.398V230.85ZM184.398 242.4H193.398V251.4H184.398V242.4ZM184.398 253.95H193.398V262.8H184.398V253.95ZM195.948 265.5H204.948V274.35H195.948V265.5ZM207.498 265.5H216.498V274.35H207.498V265.5ZM241.966 173.1H250.966V182.1H241.966V173.1ZM253.516 173.1H262.516V182.1H253.516V173.1ZM265.066 173.1H274.066V182.1H265.066V173.1ZM276.616 173.1H285.616V182.1H276.616V173.1ZM230.566 184.65H239.416V193.65H230.566V184.65ZM288.166 184.65H297.166V193.65H288.166V184.65ZM230.566 196.2H239.416V205.2H230.566V196.2ZM230.566 207.75H239.416V216.75H230.566V207.75ZM241.966 219.3H250.966V228.3H241.966V219.3ZM253.516 219.3H262.516V228.3H253.516V219.3ZM265.066 219.3H274.066V228.3H265.066V219.3ZM276.616 219.3H285.616V228.3H276.616V219.3ZM288.166 230.85H297.166V239.85H288.166V230.85ZM288.166 242.4H297.166V251.4H288.166V242.4ZM230.566 253.95H239.416V262.8H230.566V253.95ZM288.166 253.95H297.166V262.8H288.166V253.95ZM241.966 265.5H250.966V274.35H241.966V265.5ZM253.516 265.5H262.516V274.35H253.516V265.5ZM265.066 265.5H274.066V274.35H265.066V265.5ZM276.616 265.5H285.616V274.35H276.616V265.5ZM322.679 196.2H331.679V205.2H322.679V196.2ZM334.229 196.2H343.229V205.2H334.229V196.2ZM345.779 196.2H354.779V205.2H345.779V196.2ZM357.329 196.2H366.329V205.2H357.329V196.2ZM311.279 207.75H320.129V216.75H311.279V207.75ZM368.879 207.75H377.879V216.75H368.879V207.75ZM311.279 219.3H320.129V228.3H311.279V219.3ZM368.879 219.3H377.879V228.3H368.879V219.3ZM311.279 230.85H320.129V239.85H311.279V230.85ZM322.679 230.85H331.679V239.85H322.679V230.85ZM334.229 230.85H343.229V239.85H334.229V230.85ZM345.779 230.85H354.779V239.85H345.779V230.85ZM357.329 230.85H366.329V239.85H357.329V230.85ZM368.879 230.85H377.879V239.85H368.879V230.85ZM311.279 242.4H320.129V251.4H311.279V242.4ZM311.279 253.95H320.129V262.8H311.279V253.95ZM368.879 253.95H377.879V262.8H368.879V253.95ZM322.679 265.5H331.679V274.35H322.679V265.5ZM334.229 265.5H343.229V274.35H334.229V265.5ZM345.779 265.5H354.779V274.35H345.779V265.5ZM357.329 265.5H366.329V274.35H357.329V265.5ZM403.392 196.2H412.392V205.2H403.392V196.2ZM414.942 196.2H423.942V205.2H414.942V196.2ZM426.492 196.2H435.492V205.2H426.492V196.2ZM438.042 196.2H447.042V205.2H438.042V196.2ZM449.592 207.75H458.592V216.75H449.592V207.75ZM403.392 219.3H412.392V228.3H403.392V219.3ZM414.942 219.3H423.942V228.3H414.942V219.3ZM426.492 219.3H435.492V228.3H426.492V219.3ZM438.042 219.3H447.042V228.3H438.042V219.3ZM449.592 219.3H458.592V228.3H449.592V219.3ZM391.992 230.85H400.842V239.85H391.992V230.85ZM449.592 230.85H458.592V239.85H449.592V230.85ZM391.992 242.4H400.842V251.4H391.992V242.4ZM449.592 242.4H458.592V251.4H449.592V242.4ZM391.992 253.95H400.842V262.8H391.992V253.95ZM449.592 253.95H458.592V262.8H449.592V253.95ZM403.392 265.5H412.392V274.35H403.392V265.5ZM414.942 265.5H423.942V274.35H414.942V265.5ZM426.492 265.5H435.492V274.35H426.492V265.5ZM438.042 265.5H447.042V274.35H438.042V265.5ZM449.592 265.5H458.592V274.35H449.592V265.5Z" fill="white"/></svg>
+    </div>
+    「离岸，是在异地连线，也是在银幕中寻找坐标。」
+  </div>
+
+  <div class="section about">
+    <h2 class="scroll-reveal">关于离岸 · About OutSea</h2>
+    <p class="scroll-reveal">《离岸 OutSea》是一档由两位身在欧陆的影迷发起的播客。我们分别在斯德哥尔摩和阿姆斯特丹，通过简单的设备跨越海域，记录那些发生在电影节现场、古老资料馆和街角艺术院里的光影故事。这里没有冷冰冰的影评，只有身临其境的放映生态观察，以及关于“看电影”这件小事在欧洲的各种可能。</p>
+    <div class="hosts scroll-reveal">
+      <div class="host"><img src="icon-lesley.svg" alt=""> Lesley / Stockholm</div>
+      <div class="host"><img src="icon-tiki.svg" alt=""> Tiki / Amsterdam</div>
+    </div>
+  </div>
+
+  <div class="divider"></div>
+
+  <div class="section">
+    <div class="columns">
+      <div class="col">
+        <div class="col-icon"><img src="icon-festival.svg" alt=""></div>
+        <h3>影节前线</h3>
+        <h4>Film Festival</h4>
+        <p>深度直击欧洲三大电影节（戛纳/威尼斯/柏林），并深耕北欧与低地国家的电影节文化。</p>
+      </div>
+      <div class="col">
+        <div class="col-icon"><img src="icon-screening.svg" alt=""></div>
+        <h3>月度影讯</h3>
+        <h4>Daily Screening</h4>
+        <p>此时此刻，欧陆银幕上正在放什么？分享最近有意思的专题放映、实验影像事件和艺术院线动态。</p>
+      </div>
+      <div class="col">
+        <div class="col-icon"><img src="icon-project.svg" alt=""></div>
+        <h3>专题企划</h3>
+        <h4>Special Project</h4>
+        <p>邀请各路朋友，共同拆解欧陆放映生态。从电影资料馆的幕后运作，到华语电影的海外传播。</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="divider"></div>
+
+  <div class="section platforms scroll-reveal">
+    <div class="listen-icon"><img src="icon-listen.svg" alt=""></div>
+    <h2>收听我们</h2>
+    <div class="platform-links">
+      <span>小宇宙</span>
+      <span>Apple Podcasts</span>
+      <span>Spotify</span>
+    </div>
+  </div>
+
+  <div class="footer">© 2026 离岸 OutSea</div>
+</div>
+
+<script>
+const canvas = document.getElementById('c');
+const ctx = canvas.getContext('2d');
+const content = document.getElementById('content');
+
+let W, H, cols, rows;
+const S = 20;
+const state = { landOffset: 0, time: 0, animDone: false };
+
+const sandC  = '#D4CAA0';
+const grassC = '#576533';
+const waterC = '#769EBE';
+const foamC  = '#ffffff';
+
+// ===== SVG Logo Data =====
+const svgRects = [
+  [76.8,0],[0,15.4],[15.2,15.4],[30.6,15.4],[46,15.4],[61.4,15.4],[76.8,15.4],[92.2,15.4],[107.6,15.4],[123,15.4],[138.4,15.4],[153.8,15.4],[169.2,15.4],
+  [30.6,30.8],[61.4,30.8],[107.6,30.8],[138.4,30.8],
+  [30.6,46.2],[76.8,46.2],[92.2,46.2],[138.4,46.2],
+  [30.6,61.6],[61.4,61.6],[107.6,61.6],[138.4,61.6],
+  [30.6,77],[46,77],[61.4,77],[76.8,77],[92.2,77],[107.6,77],[123,77],[138.4,77],
+  [76.8,92.4],
+  [15.2,107.8],[30.6,107.8],[46,107.8],[61.4,107.8],[76.8,107.8],[92.2,107.8],[107.6,107.8],[123,107.8],[138.4,107.8],[153.8,107.8],
+  [15.2,123.2],[61.4,123.2],[107.6,123.2],[153.8,123.2],
+  [15.2,138.6],[46,138.6],[61.4,138.6],[76.8,138.6],[92.2,138.6],[107.6,138.6],[123,138.6],[153.8,138.6],
+  [15.2,154],[46,154],[123,154],[153.8,154],
+  [15.2,169.2],[138.4,169.2],[153.8,169.2],
+  [230.6,0],[292.2,0],[353.8,0],
+  [230.6,15.4],[292.2,15.4],[353.8,15.4],
+  [230.6,30.8],[246,30.8],[261.4,30.8],[276.8,30.8],[292.2,30.8],[307.6,30.8],[323,30.8],[338.4,30.8],[353.8,30.8],
+  [230.6,61.6],[246,61.6],[261.4,61.6],[276.8,61.6],[292.2,61.6],[307.6,61.6],[323,61.6],[338.4,61.6],[353.8,61.6],[369.2,61.6],
+  [230.6,77],
+  [230.6,92.4],[261.4,92.4],[276.8,92.4],[292.2,92.4],[307.6,92.4],[323,92.4],[338.4,92.4],[353.8,92.4],
+  [230.6,107.8],[307.6,107.8],
+  [230.6,123.2],[246,123.2],[261.4,123.2],[276.8,123.2],[292.2,123.2],[307.6,123.2],[323,123.2],[338.4,123.2],[353.8,123.2],[369.2,123.2],
+  [215.2,138.6],[307.6,138.6],[215.2,154],[307.6,154],[200,169.2],[307.6,169.2],
+];
+const svgRectsEn = [
+  [21.4895,201.325],[31.1145,201.325],[40.7395,201.325],[11.8645,210.95],[50.3645,210.95],
+  [2.3646,220.575],[59.9896,220.575],[2.3646,230.2],[59.9896,230.2],[2.3646,239.825],[59.9896,239.825],
+  [2.3646,249.45],[59.9896,249.45],[2.3646,259.075],[59.9896,259.075],[11.8645,268.7],[50.3645,268.7],
+  [21.4895,278.325],[31.1145,278.325],[40.7395,278.325],
+  [79.2688,220.575],[127.269,220.575],[79.2688,230.2],[127.269,230.2],[79.2688,239.825],[127.269,239.825],
+  [79.2688,249.45],[127.269,249.45],[79.2688,259.075],[127.269,259.075],
+  [79.2688,268.7],[117.644,268.7],[127.269,268.7],
+  [88.7688,278.325],[98.3938,278.325],[108.019,278.325],[127.269,278.325],
+  [156.03,201.325],[156.03,210.95],
+  [146.53,220.575],[156.03,220.575],[165.655,220.575],[175.28,220.575],
+  [156.03,230.2],[156.03,239.825],[156.03,249.45],[156.03,259.075],[156.03,268.7],
+  [165.655,278.325],[175.28,278.325],
+  [204.003,201.325],[213.628,201.325],[223.253,201.325],[232.878,201.325],
+  [194.503,210.95],[242.503,210.95],[194.503,220.575],[194.503,230.2],
+  [204.003,239.825],[213.628,239.825],[223.253,239.825],[232.878,239.825],
+  [242.503,249.45],[242.503,259.075],[194.503,268.7],[242.503,268.7],
+  [204.003,278.325],[213.628,278.325],[223.253,278.325],[232.878,278.325],
+  [271.264,220.575],[280.889,220.575],[290.514,220.575],[300.139,220.575],
+  [261.764,230.2],[309.764,230.2],[261.764,239.825],[309.764,239.825],
+  [261.764,249.45],[271.264,249.45],[280.889,249.45],[290.514,249.45],[300.139,249.45],[309.764,249.45],
+  [261.764,259.075],[261.764,268.7],[309.764,268.7],
+  [271.264,278.325],[280.889,278.325],[290.514,278.325],[300.139,278.325],
+  [338.525,220.575],[348.15,220.575],[357.775,220.575],[367.4,220.575],[377.025,230.2],
+  [338.525,239.825],[348.15,239.825],[357.775,239.825],[367.4,239.825],[377.025,239.825],
+  [329.025,249.45],[377.025,249.45],[329.025,259.075],[377.025,259.075],
+  [329.025,268.7],[377.025,268.7],
+  [338.525,278.325],[348.15,278.325],[357.775,278.325],[367.4,278.325],[377.025,278.325],
+];
+
+function buildLogoFromSVG() {
+  const s1 = 15.4;
+  const top = svgRects.map(([x,y])=>({gc:Math.round(x/s1),gr:Math.round(y/s1)}));
+  const s2 = 9.625, bx = 2.3646, by = 201.325;
+  const en = svgRectsEn.map(([x,y])=>({gc:Math.round((x-bx)/s2),gr:Math.round((y-by)/s2)}));
+  return {
+    top, topW: Math.max(...top.map(p=>p.gc))+1, topH: Math.max(...top.map(p=>p.gr))+1,
+    en, enW: Math.max(...en.map(p=>p.gc))+1, enH: Math.max(...en.map(p=>p.gr))+1
+  };
+}
+const logo = buildLogoFromSVG();
+
+let landColor, sandLine, logoBitmap;
+
+function initGrid() {
+  W = window.innerWidth; H = window.innerHeight;
+  canvas.width = W; canvas.height = H;
+  cols = Math.ceil(W/S); rows = Math.ceil(H/S);
+
+  landColor = new Array(rows*cols);
+  sandLine = new Array(cols);
+  for(let c=0;c<cols;c++) sandLine[c]=Math.floor(rows*0.75+Math.sin(c*0.8)+Math.sin(c*0.3+1));
+  for(let r=0;r<rows;r++) for(let c=0;c<cols;c++) landColor[r*cols+c]=r<sandLine[c]?sandC:grassC;
+
+  // Logo bitmap
+  const gap=2, th=logo.topH+gap+logo.enH;
+  const sr=Math.floor((rows-th)/2);
+  const tc=Math.floor((cols-logo.topW)/2), ec=Math.floor((cols-logo.enW)/2), er=sr+logo.topH+gap;
+  logoBitmap = new Uint8Array(rows*cols);
+  for(const p of logo.top){const gr=sr+p.gr,gc=tc+p.gc;if(gr>=0&&gr<rows&&gc>=0&&gc<cols)logoBitmap[gr*cols+gc]=1;}
+  for(const p of logo.en){const gr=er+p.gr,gc=ec+p.gc;if(gr>=0&&gr<rows&&gc>=0&&gc<cols)logoBitmap[gr*cols+gc]=1;}
+}
+
+function waveRow(col,t,base){const x=col/cols;return base+Math.sin(x*8+t*1.5)*1.5+Math.sin(x*5+t*0.9+2)*1.0;}
+
+function render() {
+  const t = state.time;
+  ctx.fillStyle = waterC;
+  ctx.fillRect(0,0,W,H);
+
+  if (!state.animDone) {
+    const offset = Math.floor(state.landOffset);
+    const surf = new Float32Array(cols);
+    for(let c=0;c<cols;c++) surf[c]=waveRow(c,t,offset);
+
+    const batches = {};
+    for(let r=0;r<rows;r++){
+      for(let c=0;c<cols;c++){
+        const s=surf[c], lr=r-offset, land=lr>=0&&lr<rows, idx=r*cols+c;
+        let color;
+        if(r<s) color=logoBitmap[idx]?foamC:null;
+        else if(r<s+1) color=foamC;
+        else if(r<s+3&&land) color=Math.sin(c*5.3+t*2.5+r*3.7)>0.7?foamC:landColor[lr*cols+c];
+        else if(land) color=landColor[lr*cols+c];
+        else color=logoBitmap[idx]?foamC:null;
+        if(color){if(!batches[color])batches[color]=[];batches[color].push(c,r);}
+      }
+    }
+    for(const color in batches){
+      ctx.fillStyle=color;const a=batches[color];
+      for(let i=0;i<a.length;i+=2) ctx.fillRect(a[i]*S,a[i+1]*S,S-1,S-1);
+    }
+  } else {
+    // Logo only
+    ctx.fillStyle = foamC;
+    for(let i=0;i<logoBitmap.length;i++){
+      if(logoBitmap[i]){const c=i%cols,r=(i-c)/cols;ctx.fillRect(c*S,r*S,S-1,S-1);}
+    }
+  }
+
+  state.time += 0.016;
+  requestAnimationFrame(render);
+}
+
+// === Flow ===
+let animStarted = false;
+
+function startAnim() {
+  animStarted = true;
+  canvas.style.cursor = 'default';
+  // Preload videos during animation
+  var v1 = document.getElementById('bgv1');
+  var v2 = document.getElementById('bgv2');
+  v1.loop = true; v2.loop = true;
+  v1.load(); v2.load();
+  const tl = gsap.timeline();
+  tl.to(state, { landOffset: rows*1.2, duration: 3, ease: 'power2.inOut' }, 0);
+  tl.call(() => { state.animDone = true; enterSite(); }, null, 3.2);
+}
+
+function enterSite() {
+  // Prepare video & noise behind canvas
+  var v1 = document.getElementById('bgv1');
+  var v2 = document.getElementById('bgv2');
+  v1.style.display = 'block'; v1.style.opacity = 1;
+  v2.style.display = 'block'; v2.style.opacity = 0;
+  v1.play(); v2.play();
+  v2.currentTime = v1.duration ? v1.duration / 2 : 0;
+  var cur = 0;
+  setInterval(function() {
+    var active = cur === 0 ? v1 : v2;
+    if (active.duration && active.duration - active.currentTime < 1.5) {
+      cur = 1 - cur;
+      v1.style.opacity = cur === 0 ? 1 : 0;
+      v2.style.opacity = cur === 1 ? 1 : 0;
+    }
+  }, 200);
+
+  var nc = document.getElementById('noise');
+  nc.style.display = 'block';
+  var nx = nc.getContext('2d');
+  nc.width = 256; nc.height = 256;
+  var noiseImg = nx.createImageData(256, 256);
+  function drawNoise() {
+    var d = noiseImg.data;
+    for (var i = 0; i < d.length; i += 4) {
+      var v = Math.random() * 255 | 0;
+      d[i] = d[i+1] = d[i+2] = v; d[i+3] = 255;
+    }
+    nx.putImageData(noiseImg, 0, 0);
+    requestAnimationFrame(drawNoise);
+  }
+  drawNoise();
+
+  // Show content with opacity 0, then crossfade canvas out + content in together
+  content.style.display = 'block';
+  content.style.opacity = 0;
+  document.body.style.overflow = 'auto';
+
+  gsap.registerPlugin(ScrollTrigger);
+  gsap.to(canvas, { opacity: 0, duration: 1.2, ease: 'power2.inOut' });
+  gsap.to(content, { opacity: 1, duration: 1.2, ease: 'power2.inOut', onComplete: () => {
+    canvas.style.display = 'none';
+    ScrollTrigger.refresh();
+    gsap.utils.toArray('.scroll-reveal').forEach(el => {
+      gsap.fromTo(el, { opacity: 0, y: 40 }, {
+        opacity: 1, y: 0, duration: 0.8, ease: 'power2.out',
+        scrollTrigger: { trigger: el, start: 'top 85%', toggleActions: 'play none none none' }
+      });
+    });
+    gsap.utils.toArray('.col').forEach(function(el) {
+      gsap.fromTo(el, { opacity: 0, y: 40 }, {
+        opacity: 1, y: 0, duration: 0.8, ease: 'power2.out',
+        scrollTrigger: { trigger: '.columns', start: 'top 85%', toggleActions: 'play none none none' }
+      });
+    });
+  }});
+  setTimeout(() => window.scrollTo({top:0}), 100);
+}
+
+canvas.addEventListener('click', () => {
+  var bgm = document.getElementById('bgm');
+  bgm.volume = 0.3;
+  bgm.play().catch(function(){});
+  if (!animStarted) {
+    document.getElementById('click-hint').style.display = 'none';
+    startAnim();
+    return;
+  }
+  if (state.animDone) { enterSite(); return; }
+});
+
+window.onload = () => {
+  initGrid();
+  render();
+};
+window.onresize = () => { if(!state.animDone) initGrid(); };
+
+
+</script>
+</body>
+</html>

@@ -32,7 +32,7 @@ canvas{display:block;cursor:pointer;position:fixed;top:0;left:0;z-index:10}
 .host{display:flex;align-items:center;gap:10px}
 .host img{width:28px;height:28px}
 
-.columns{display:flex;gap:24px;max-width:960px;margin:0 auto;justify-content:center;min-height:50vh;align-items:center}
+.columns{display:flex;gap:24px;max-width:960px;margin:0 auto;justify-content:center;min-height:50vh;align-items:flex-start}
 .col{flex:1;padding:32px 20px;text-align:center}
 .col-icon{margin-bottom:12px}
 .col-icon img{width:40px;height:40px}
@@ -44,6 +44,14 @@ canvas{display:block;cursor:pointer;position:fixed;top:0;left:0;z-index:10}
 .listen-icon img{width:36px;height:36px}
 .platforms h2{font-size:14px;color:#01C366;letter-spacing:4px;margin-bottom:32px}
 .platform-links{display:flex;gap:16px;justify-content:center;flex-wrap:wrap}
+.episodes h2{font-size:14px;color:#01C366;letter-spacing:4px;text-transform:uppercase;margin-bottom:32px;text-align:center}
+.episode-list{display:grid;grid-template-columns:repeat(5,1fr);gap:24px;max-width:960px;margin:0 auto}
+.episode{text-align:center}
+.episode img{width:100%;border-radius:8px;cursor:pointer;transition:transform .2s}
+.episode img:hover{transform:scale(1.03)}
+.episode a img{cursor:pointer}
+.episode p{font-size:12px;color:rgba(255,255,255,.85);margin-top:12px;line-height:1.6}
+.platform-links a{text-decoration:none}
 .platform-links span{padding:12px 24px;color:#fff;font-size:13px;letter-spacing:2px}
 
 .footer{padding:40px;text-align:center;font-size:11px;color:rgba(255,255,255,.35);letter-spacing:2px}
@@ -58,6 +66,7 @@ canvas{display:block;cursor:pointer;position:fixed;top:0;left:0;z-index:10}
 .hosts{flex-direction:column;gap:16px;align-items:center;text-align:center}
 .platform-links{flex-direction:column;gap:8px}
 .col p{font-size:12px}
+.episode-list{grid-template-columns:1fr;max-width:200px;margin:0 auto}
 }
 .bg-video{position:fixed;top:50%;left:50%;min-width:100%;min-height:100%;z-index:0;pointer-events:none;display:none;transition:opacity 1.5s ease;transform:translate(-50%,-50%) scale(1.35)}
 #noise{position:fixed;top:0;left:0;width:100%;height:100%;z-index:0;pointer-events:none;opacity:0.05;display:none}
@@ -86,7 +95,7 @@ canvas{display:block;cursor:pointer;position:fixed;top:0;left:0;z-index:10}
     <h2 class="scroll-reveal">关于离岸 · About OutSea</h2>
     <p class="scroll-reveal">《离岸 OutSea》 是一档专注于欧洲电影节生态与放映文化观察的文化播客。离开熟悉的海岸，一起去到更远、更深的电影海洋。比起单纯的评述，我们更着迷于电影在当下的呈现与感知。我们关注电影节的现场，也关注银幕如何介入日常生活。希望通过观看、记录与对话，在影像之间寻找属于我们的记忆锚点，以及关于“看电影”这件小事在欧洲的各种可能。</p>
     <div class="hosts scroll-reveal">
-      <div class="host"><img src="icon-lesley.svg" alt=""> Lesley / Stockholm</div>
+      <div class="host"><img src="icon-lesley.svg" alt=""> 机麻 (Lesley) / Stockholm</div>
       <div class="host"><img src="icon-tiki.svg" alt=""> Tiki / Amsterdam</div>
     </div>
   </div>
@@ -100,6 +109,7 @@ canvas{display:block;cursor:pointer;position:fixed;top:0;left:0;z-index:10}
         <h3>影节前线</h3>
         <h4>Film Festival</h4>
         <p>去电影节是一件很重要的事。当我们参加电影节时，我们谈论什么？电影节为什么如此吸引我们？</p>
+        <br>
         <p>一个关于电影节与在地电影文化的观察窗口。除了直击欧洲三大电影节的现场，我们还关注北欧与低地国家多元的电影节生态，探讨电影节作为一种文化场域，如何定义当代影像的可见性。</p>
       </div>
       <div class="col">
@@ -107,6 +117,7 @@ canvas{display:block;cursor:pointer;position:fixed;top:0;left:0;z-index:10}
         <h3>月度影讯</h3>
         <h4>Monthly Screening</h4>
         <p>在电影院里「浪费」的时间。没有「审查」的限制，我们能看什么电影？欧陆电影院能看点啥？</p>
+        <br>
         <p>我们分享那些正在拓宽日常感知的专题放映、实验影像事件以及艺术院线动态，并试图记录影院作为文化空间，如何参与并重构城市的日常生活。</p>
       </div>
       <div class="col">
@@ -114,7 +125,40 @@ canvas{display:block;cursor:pointer;position:fixed;top:0;left:0;z-index:10}
         <h3>专题企划</h3>
         <h4>Special Project</h4>
         <p>喜欢和朋友聚在一起聊电影。</p>
+        <br>
         <p>我们邀请不同背景的朋友，共同探讨欧洲不同国家放映生态，从电影资料馆的幕后运作，到华语电影的海外传播。</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="divider"></div>
+
+  <div class="section episodes">
+    <h2 class="scroll-reveal">已发布单集 · Episodes</h2>
+    <div class="episode-list scroll-reveal">
+      <div class="episode">
+        <a href="https://open.spotify.com/episode/5p4VfEjaA395OEDWCbGjtR" target="_blank"><img src="E001.png" alt="E001"></a>
+        <p>E001｜海的那一边，影展一大片：戛纳影迷证与欧洲电影院</p>
+      </div>
+      <div class="episode">
+        <img src="E002.png" alt="E002">
+        <p>E002｜戛纳电影节：今年是大年？</p>
+      </div>
+      <div class="episode">
+        <img src="E003.png" alt="E003">
+        <p>E003｜戛纳电影节看了什么</p>
+      </div>
+      <div class="episode">
+        <img src="E004.png" alt="E004">
+        <p>E004｜戛纳电影节看了什么</p>
+      </div>
+      <div class="episode">
+        <img src="E005.png" alt="E005">
+        <p>E005｜在欧洲看电影要花多少钱？</p>
+      </div>
+      <div class="episode">
+        <img src="E006.png" alt="E006">
+        <p>E006｜5月和6月都看了什么？</p>
       </div>
     </div>
   </div>
@@ -125,9 +169,8 @@ canvas{display:block;cursor:pointer;position:fixed;top:0;left:0;z-index:10}
     <div class="listen-icon"><img src="icon-listen.svg" alt=""></div>
     <h2>收听我们 · Listen</h2>
     <div class="platform-links">
-      <span>小宇宙</span>
-      <span>Apple Podcasts</span>
-      <span>Spotify</span>
+      <a href="https://www.xiaoyuzhoufm.com/podcast/69f6430cf9f05b701cbdc749" target="_blank"><span>小宇宙</span></a>
+      <a href="https://open.spotify.com/show/4pvkNCwELYUqGnMgQceO3m" target="_blank"><span>Spotify</span></a>
     </div>
   </div>
 
